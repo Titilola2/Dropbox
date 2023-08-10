@@ -2,6 +2,15 @@
   text-align: center;
 }
 
+.bg-image {
+  background-image: url('./images/background.jpg'); /* Adjust the path based on your file structure */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* Optional: Keep the background fixed while scrolling */
+  /* You can add more styling properties here */
+}
+
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

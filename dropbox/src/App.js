@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import backgroundImage from './images/background.jpg';
 import "@aws-amplify/ui-react/styles.css";
 import { API, Storage } from 'aws-amplify';
 import {
@@ -68,6 +69,25 @@ const App = ({ signOut }) => {
     });
   }
 
+  async function downloadFile(note) {
+    try {
+      // Fetch the URL of the file from S3
+      const url = await Storage.get(note.name);
+      
+      // Create a hidden anchor element to trigger download
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.download = note.name; // Set the download filename
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    }
+  }
+  
+
   {notes.map((note) => (
     <Flex
       key={note.id || note.name}
@@ -93,6 +113,7 @@ const App = ({ signOut }) => {
   ))}
 
   return (
+    <div className="bg-image">
     <View className="App">
       <Heading level={1}>Dropbox</Heading>
       <View as="form" margin="3rem 0" onSubmit={createNote}>
@@ -108,7 +129,6 @@ const App = ({ signOut }) => {
           
           
           <View
-          
            name="image"
              as="input"
              type="file"
@@ -136,11 +156,17 @@ const App = ({ signOut }) => {
             <Button variation="link" onClick={() => deleteNote(note)}>
               Delete File
             </Button>
+            {note.image && (
+        <Button variation="link" onClick={() => downloadFile(note)}>
+          Download File
+        </Button>
+      )} 
           </Flex>
         ))}
       </View>
       <Button onClick={signOut}>Sign Out</Button>
     </View>
+     </div>
   );
 };
 
